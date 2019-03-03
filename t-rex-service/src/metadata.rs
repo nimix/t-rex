@@ -262,8 +262,13 @@ impl MvtService {
     /// MBTiles metadata.json (https://github.com/mapbox/mbtiles-spec/blob/master/1.3/spec.md)
     pub fn get_mbtiles_metadata(&self, tileset: &str) -> JsonResult {
         let mut metadata = self.get_tilejson_metadata(tileset)?;
-        metadata["bounds"] = json!(metadata["bounds"].to_string());
-        metadata["center"] = json!(metadata["center"].to_string());
+        // convert from arrays [] to plain comma separated strings
+        let mut bounds = metadata["bounds"].to_string();
+        let mut center = metadata["center"].to_string();
+        bounds.retain(|c|{c.is_ascii_digit()||c=='.'||c==','||c=='-'});
+        center.retain(|c|{c.is_ascii_digit()||c=='.'||c==','||c=='-'});
+        metadata["bounds"] = json!(bounds);
+        metadata["center"] = json!(center);
         let layers = self.get_tilejson_layers(tileset)?;
         let vector_layers = self.get_tilejson_vector_layers(tileset)?;
         let metadata_vector_layers = json!({
