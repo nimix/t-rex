@@ -224,7 +224,7 @@ impl<'a> Tile<'a> {
         mvt_feature.mut_tags().push(validx as u32);
     }
 
-    pub fn add_feature(&self, mut mvt_layer: &mut vector_tile::Tile_Layer, feature: &Feature) {
+    pub fn add_feature(&self, mut mvt_layer: &mut vector_tile::Tile_Layer, feature: &Feature) -> bool {
         let mut mvt_feature = vector_tile::Tile_Feature::new();
         if let Some(fid) = feature.fid() {
             mvt_feature.set_id(fid);
@@ -268,8 +268,10 @@ impl<'a> Tile<'a> {
                 mvt_feature.set_field_type(g_type);
                 mvt_feature.set_geometry(enc_geom);
                 mvt_layer.mut_features().push(mvt_feature);
+                return true
             }
         }
+        return false
     }
 
     pub fn add_layer(&mut self, mvt_layer: vector_tile::Tile_Layer) {

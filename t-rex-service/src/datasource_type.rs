@@ -67,7 +67,7 @@ impl DatasourceInput for Datasource {
         read: F,
     ) -> u64
     where
-        F: FnMut(&Feature),
+        F: FnMut(&Feature) -> bool,
     {
         match self {
             &Datasource::Postgis(ref ds) => ds.retrieve_features(layer, extent, zoom, grid, read),

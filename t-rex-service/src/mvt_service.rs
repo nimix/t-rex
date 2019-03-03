@@ -95,7 +95,7 @@ impl MvtService {
                     zoom,
                     &self.grid,
                     |feat| {
-                        tile.add_feature(&mut mvt_layer, feat);
+                        return tile.add_feature(&mut mvt_layer, feat);
                     },
                 );
                 let elapsed = now.elapsed();

@@ -797,7 +797,7 @@ impl DatasourceInput for PostgisInput {
         mut read: F,
     ) -> u64
     where
-        F: FnMut(&Feature),
+        F: FnMut(&Feature) -> bool,
     {
         let conn = self.conn();
         let query = self.query(&layer, zoom);
@@ -850,8 +850,9 @@ impl DatasourceInput for PostgisInput {
                 layer: layer,
                 row: &row.unwrap(),
             };
-            read(&feature);
-            cnt += 1;
+            if read(&feature){
+                cnt += 1;
+            }
             if cnt == query_limit as u64 {
                 info!(
                     "Features of layer {} limited to {} (tile query_limit reached, zoom level {})",

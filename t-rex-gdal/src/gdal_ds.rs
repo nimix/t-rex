@@ -633,7 +633,7 @@ impl DatasourceInput for GdalDatasource {
         mut read: F,
     ) -> u64
     where
-        F: FnMut(&Feature),
+        F: FnMut(&Feature) -> bool,
     {
         let mut dataset = Dataset::open(Path::new(&self.path)).unwrap();
         let layer_name = layer.table_name.as_ref().unwrap();
@@ -685,8 +685,9 @@ impl DatasourceInput for GdalDatasource {
                 transform: transformation.as_ref(),
                 feature: &feature,
             };
-            read(&feat);
-            cnt += 1;
+            if read(&feat){
+                cnt += 1;
+            }
             if cnt == query_limit as u64 {
                 info!(
                     "Features of layer {} limited to {} (tile query_limit reached, zoom level {})",

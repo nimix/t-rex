@@ -30,7 +30,7 @@ pub trait DatasourceInput {
         read: F,
     ) -> u64
     where
-        F: FnMut(&Feature);
+        F: FnMut(&Feature) -> bool;
 }
 
 pub struct DummyDatasource;
@@ -61,7 +61,7 @@ impl DatasourceInput for DummyDatasource {
         _read: F,
     ) -> u64
     where
-        F: FnMut(&Feature),
+        F: FnMut(&Feature) -> bool,
     {
         0
     }
